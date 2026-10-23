@@ -1,0 +1,277 @@
+DATA CHECK OK: 64,000 rows; arms: {'Womens E-Mail': 21387, 'Mens E-Mail': 21307, 'No E-Mail': 21306}
+{
+  "dataset": {
+    "n": 64000,
+    "arms": {
+      "Womens E-Mail": 21387,
+      "Mens E-Mail": 21307,
+      "No E-Mail": 21306
+    },
+    "control_conversion_rate": 0.005726,
+    "control_mean_spend": 0.6528
+  },
+  "itt_vs_control": {
+    "mens_email": {
+      "n_treated": 21307,
+      "n_control": 21306,
+      "conversion": {
+        "estimate": 0.006805,
+        "ci95": [
+          0.005,
+          0.00861
+        ]
+      },
+      "spend": {
+        "estimate": 0.769827,
+        "ci95": [
+          0.485144,
+          1.05451
+        ]
+      },
+      "control_conversion_rate": 0.005726086548390125,
+      "treated_conversion_rate": 0.01253109306800582
+    },
+    "womens_email": {
+      "n_treated": 21387,
+      "n_control": 21306,
+      "conversion": {
+        "estimate": 0.003111,
+        "ci95": [
+          0.001499,
+          0.004724
+        ]
+      },
+      "spend": {
+        "estimate": 0.424412,
+        "ci95": [
+          0.16896,
+          0.679865
+        ]
+      },
+      "control_conversion_rate": 0.005726086548390125,
+      "treated_conversion_rate": 0.008837144059475383
+    },
+    "any_email": {
+      "n_treated": 42694,
+      "n_control": 21306,
+      "conversion": {
+        "estimate": 0.004955,
+        "ci95": [
+          0.003548,
+          0.006361
+        ]
+      },
+      "spend": {
+        "estimate": 0.596796,
+        "ci95": [
+          0.376186,
+          0.817406
+        ]
+      },
+      "control_conversion_rate": 0.005726086548390125,
+      "treated_conversion_rate": 0.010680657703658593
+    }
+  },
+  "dml_any_email_vs_control": {
+    "conversion": {
+      "estimate": 0.004988,
+      "ci95": [
+        0.003581,
+        0.006396
+      ]
+    },
+    "spend": {
+      "estimate": 0.59869,
+      "ci95": [
+        0.378556,
+        0.818823
+      ]
+    }
+  },
+  "aipw_any_email_vs_control": {
+    "conversion": {
+      "estimate": 0.004974,
+      "ci95": [
+        0.003567,
+        0.006381
+      ]
+    },
+    "spend": {
+      "estimate": 0.593067,
+      "ci95": [
+        0.373155,
+        0.81298
+      ]
+    }
+  },
+  "cate_by_segment": {
+    "history_spend": {
+      "mid ($91-$255)": {
+        "n": 21333,
+        "conversion": {
+          "estimate": 0.004119,
+          "ci95": [
+            0.001923,
+            0.006314
+          ]
+        },
+        "spend": {
+          "estimate": 0.488408,
+          "ci95": [
+            0.167529,
+            0.809286
+          ]
+        }
+      },
+      "high (>$255)": {
+        "n": 21332,
+        "conversion": {
+          "estimate": 0.006358,
+          "ci95": [
+            0.003464,
+            0.009251
+          ]
+        },
+        "spend": {
+          "estimate": 0.698897,
+          "ci95": [
+            0.25053,
+            1.147263
+          ]
+        }
+      },
+      "low (<$91)": {
+        "n": 21335,
+        "conversion": {
+          "estimate": 0.00438,
+          "ci95": [
+            0.002236,
+            0.006525
+          ]
+        },
+        "spend": {
+          "estimate": 0.601828,
+          "ci95": [
+            0.235634,
+            0.968022
+          ]
+        }
+      }
+    },
+    "recency_months": {
+      "9-12": {
+        "n": 19842,
+        "conversion": {
+          "estimate": 0.006182,
+          "ci95": [
+            0.004139,
+            0.008225
+          ]
+        },
+        "spend": {
+          "estimate": 0.623571,
+          "ci95": [
+            0.30096,
+            0.946183
+          ]
+        }
+      },
+      "5-8": {
+        "n": 16688,
+        "conversion": {
+          "estimate": 0.003056,
+          "ci95": [
+            0.000574,
+            0.005538
+          ]
+        },
+        "spend": {
+          "estimate": 0.316935,
+          "ci95": [
+            -0.105138,
+            0.739008
+          ]
+        }
+      },
+      "1-4": {
+        "n": 27470,
+        "conversion": {
+          "estimate": 0.005246,
+          "ci95": [
+            0.002745,
+            0.007747
+          ]
+        },
+        "spend": {
+          "estimate": 0.750827,
+          "ci95": [
+            0.371925,
+            1.129728
+          ]
+        }
+      }
+    },
+    "customer_type": {
+      "returning": {
+        "n": 31856,
+        "conversion": {
+          "estimate": 0.003569,
+          "ci95": [
+            0.001379,
+            0.005759
+          ]
+        },
+        "spend": {
+          "estimate": 0.345929,
+          "ci95": [
+            -0.002345,
+            0.694203
+          ]
+        }
+      },
+      "new": {
+        "n": 32144,
+        "conversion": {
+          "estimate": 0.00633,
+          "ci95": [
+            0.004563,
+            0.008098
+          ]
+        },
+        "spend": {
+          "estimate": 0.845745,
+          "ci95": [
+            0.57426,
+            1.11723
+          ]
+        }
+      }
+    }
+  },
+  "largest_conversion_effect_segment": {
+    "family": "history_spend",
+    "segment": "high (>$255)",
+    "conversion_ate": 0.006358
+  },
+  "e_value_conversion": {
+    "risk_ratio": 1.8653,
+    "e_value_point": 3.136,
+    "e_value_ci_limit": 2.427,
+    "caveat": "Data are from a randomized trial, so unmeasured confounding is ruled out by design; the E-value is reported as the benchmark an observational analysis of the same effect would have to survive."
+  },
+  "business_translation": {
+    "incremental_conversions_per_1000_emailed": 4.96,
+    "incremental_conversions_per_1000_ci95": [
+      3.55,
+      6.36
+    ],
+    "incremental_revenue_per_1000_emailed_usd": 596.8,
+    "incremental_revenue_per_1000_ci95_usd": [
+      376.19,
+      817.41
+    ],
+    "margin_note": "`spend` is revenue, not profit; the dataset has no cost data. Net gain = incremental revenue x the retailer's gross margin (e.g. $298 per 1,000 emailed at an illustrative 50% margin), against a near-zero marginal cost per email sent."
+  }
+}
+
+Wrote outputs/results.json and outputs/cate_by_segment.png
