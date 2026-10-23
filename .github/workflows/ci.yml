@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run the full analysis (ITT, DML, CATE, uplift, refutation)
+        run: python src/analysis.py > /tmp/analysis_stdout.txt
+
+      - name: Verify outputs
+        run: |
+          python - <<'EOF'
+          import json, os
+          r = json.load(open("outputs/results.json"))
+          expected = {"dataset", "itt_vs_control", "dml_any_email_vs_control",
+                      "aipw_any_email_vs_control", "cate_by_segment",
+                      "largest_conversion_effect_segment", "e_value_conversion",
+                      "business_translation", "uplift_targeting", "refutation"}
+          missing = expected - set(r)
+          assert not missing, f"missing top-level keys: {missing}"
+          for fig in ("outputs/qini_curve.png", "outputs/cate_by_segment.png"):
+              assert os.path.exists(fig), f"missing {fig}"
+          print("outputs/results.json OK:", len(r), "top-level sections; figures present")
+          EOF

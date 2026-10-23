@@ -34,6 +34,14 @@ run log: [RUN_LOG.txt](RUN_LOG.txt).
    recency bands, new vs returning customers.
 4. **E-value.** Sensitivity of the conversion effect to unmeasured
    confounding, reported with its randomized-design caveat below.
+5. **Uplift / targeting.** T-learner and X-learner uplift models
+   (gradient-boosting bases, 5-fold cross-fitting, out-of-fold scores),
+   evaluated with Qini curves / AUUC against random targeting, and a
+   policy table estimated with the Qini policy-value estimator
+   (`src/uplift.py`).
+6. **Refutation.** The same double-ML pipeline run on a permuted
+   (placebo) assignment and on a pre-treatment pseudo-outcome
+   (history spend); both must read ~0.
 
 ## Headline results
 
@@ -74,6 +82,60 @@ incremental conversions [3.55, 6.36] and +$597 incremental revenue
 data, so net gain is the revenue figure times the retailer's gross
 margin (≈ $298 per 1,000 at an illustrative 50% margin), against a
 near-zero marginal cost per email sent.
+
+## Targeting: does ranking customers help?
+
+Barely — and that is a computed result, not an impression. T-learner
+and X-learner uplift models for any-email vs no-email were scored
+out-of-fold and evaluated with Qini curves. The Qini value at fraction
+φ is the estimated incremental conversions per customer on the file
+from targeting the top φ by predicted uplift; random targeting is the
+diagonal, so AUUC for random targeting is half the φ = 1 value
+(0.00165 for conversion).
+
+| Outcome | Learner | AUUC | Gain over random |
+|---|---|---|---|
+| Conversion | T-learner | 0.00154 | −0.00011 |
+| Conversion | X-learner | 0.00168 | +0.00002 |
+| Spend | T-learner | 0.18007 | −0.01899 |
+| Spend | X-learner | 0.15451 | −0.04455 |
+
+The X-learner (chosen for the policy table, as the better of the two)
+beats random targeting by ~1% of the curve area on conversion; the
+T-learner and both spend rankings are worse than random. With 578
+conversions in 64,000 customers, individual-level effect heterogeneity
+is mostly noise here, even though coarse segment effects (above) are
+real. The policy consequences, estimated with the Qini policy-value
+estimator on the out-of-fold X-learner ranking:
+
+| Policy | Emails sent | Emails avoided | Incr. conversions per 1,000 on file | Incr. revenue per 1,000 on file |
+|---|---|---|---|---|
+| Email all | 64,000 | 0 | 3.31 | $398 |
+| Target top 50% | 32,000 | 32,000 | 1.70 | $187 |
+| Target top 25% | 16,000 | 48,000 | 1.02 | $102 |
+
+Targeting the top quartile raises efficiency per send (4.10 vs 3.31
+incremental conversions per 1,000 emailed) but keeps only ~31% of the
+total incremental conversions. Since a segment-level read shows no
+group with a negative effect and email's marginal cost is near zero,
+email-all is the volume-maximizing policy for a one-shot campaign;
+targeting only pays if send volume itself carries a cost (fatigue,
+list health) — which this dataset does not measure. The full
+recommendation is in the [campaign memo](docs/campaign_memo.md).
+
+![Qini curves](outputs/qini_curve.png)
+
+## Refutation checks
+
+Same double-ML pipeline, two ways it must find nothing:
+
+- **Placebo treatment** (assignment randomly permuted): conversion
+  −0.008 pp [−0.163, +0.148]; spend −$0.09 [−$0.35, +$0.16]. Both
+  cover zero and are an order of magnitude below the real effects.
+- **Pseudo-outcome** (pre-treatment history spend as the outcome,
+  real assignment): +$0.19 [−$0.17, +$0.55], on a covariate with a
+  mean of ~$242. The assignment cannot have caused pre-treatment
+  spend, and the pipeline correctly finds that it didn't.
 
 ## Limitations
 

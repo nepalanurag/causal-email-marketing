@@ -11,9 +11,14 @@ Estimates, in order:
      returning.
   4. E-value for the any-email conversion effect.
   5. Business translation: effect per 1,000 customers emailed.
+  6. Uplift/targeting (src/uplift.py): T- and X-learners, Qini/AUUC
+     evaluation on out-of-fold scores, policy table.
+  7. Refutation pack (src/uplift.py): placebo treatment (permuted
+     assignment) and pseudo-outcome (pre-treatment history spend).
 
 Run:  .venv/bin/python src/analysis.py
-Writes outputs/results.json and outputs/cate_by_segment.png.
+Writes outputs/results.json, outputs/cate_by_segment.png and
+outputs/qini_curve.png.
 """
 import json
 
@@ -180,6 +185,12 @@ business = {
                     "illustrative 50% margin), against a near-zero marginal cost per email sent."),
 }
 
+# --- 6/7. Uplift/targeting + refutation pack (src/uplift.py) ---------------
+from uplift import run_refutation, run_uplift
+
+uplift_res = run_uplift(df, X, W)
+refutation_res = run_refutation(df, X, W)
+
 results = {
     "dataset": {"n": int(len(df)), "arms": {k: int(v) for k, v in arms.items()},
                 "control_conversion_rate": round(p0, 6),
@@ -197,6 +208,8 @@ results = {
                                       "reported as the benchmark an observational analysis "
                                       "of the same effect would have to survive.")},
     "business_translation": business,
+    "uplift_targeting": uplift_res,
+    "refutation": refutation_res,
 }
 with open("outputs/results.json", "w") as f:
     json.dump(results, f, indent=2)
@@ -222,4 +235,4 @@ fig.savefig("outputs/cate_by_segment.png", dpi=150)
 
 # --- console summary ---------------------------------------------------------
 print(json.dumps(results, indent=2))
-print("\nWrote outputs/results.json and outputs/cate_by_segment.png")
+print("\nWrote outputs/results.json, outputs/cate_by_segment.png and outputs/qini_curve.png")

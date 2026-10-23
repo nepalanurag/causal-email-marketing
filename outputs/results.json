@@ -270,5 +270,95 @@
       817.41
     ],
     "margin_note": "`spend` is revenue, not profit; the dataset has no cost data. Net gain = incremental revenue x the retailer's gross margin (e.g. $298 per 1,000 emailed at an illustrative 50% margin), against a near-zero marginal cost per email sent."
+  },
+  "uplift_targeting": {
+    "outcome_primary": "conversion",
+    "treatment": "any email vs no email",
+    "evaluation": "Qini curve / AUUC on 5-fold cross-fitted (out-of-fold) scores",
+    "learners": {
+      "t_learner": {
+        "auuc": 0.00154226,
+        "auuc_random": 0.00165258,
+        "auuc_gain_over_random": -0.00011032,
+        "ate_at_phi_1": 0.00330516
+      },
+      "x_learner": {
+        "auuc": 0.00167599,
+        "auuc_random": 0.00165258,
+        "auuc_gain_over_random": 2.341e-05,
+        "ate_at_phi_1": 0.00330516
+      }
+    },
+    "learners_spend_secondary": {
+      "t_learner": {
+        "auuc": 0.18006965,
+        "auuc_random": 0.19905946,
+        "auuc_gain_over_random": -0.01898981,
+        "ate_at_phi_1": 0.39811893
+      },
+      "x_learner": {
+        "auuc": 0.15451393,
+        "auuc_random": 0.19905946,
+        "auuc_gain_over_random": -0.04454553,
+        "ate_at_phi_1": 0.39811893
+      }
+    },
+    "chosen_learner_by_auuc": "x_learner",
+    "policy_table": {
+      "email_all": {
+        "emails_sent": 64000,
+        "emails_avoided": 0,
+        "incremental_conversions_total_est": 211.53,
+        "incremental_conversions_per_1000_customers": 3.31,
+        "incremental_conversions_per_1000_emailed": 3.31,
+        "incremental_revenue_per_1000_customers_usd": 398.12,
+        "incremental_revenue_per_1000_emailed_usd": 398.12
+      },
+      "target_top_50pct": {
+        "emails_sent": 32000,
+        "emails_avoided": 32000,
+        "incremental_conversions_total_est": 108.5,
+        "incremental_conversions_per_1000_customers": 1.7,
+        "incremental_conversions_per_1000_emailed": 3.39,
+        "incremental_revenue_per_1000_customers_usd": 187.22,
+        "incremental_revenue_per_1000_emailed_usd": 374.43
+      },
+      "target_top_25pct": {
+        "emails_sent": 16000,
+        "emails_avoided": 48000,
+        "incremental_conversions_total_est": 65.54,
+        "incremental_conversions_per_1000_customers": 1.02,
+        "incremental_conversions_per_1000_emailed": 4.1,
+        "incremental_revenue_per_1000_customers_usd": 101.89,
+        "incremental_revenue_per_1000_emailed_usd": 407.56
+      }
+    },
+    "policy_note": "Policies rank customers by the chosen learner's out-of-fold conversion-uplift score; incremental conversions and revenue are estimated with the Qini policy-value estimator (treated response minus control response scaled to the treated count) inside the targeted set."
+  },
+  "refutation": {
+    "placebo_treatment_permuted_assignment": {
+      "conversion": {
+        "estimate": -7.7e-05,
+        "ci95": [
+          -0.001634,
+          0.001481
+        ]
+      },
+      "spend": {
+        "estimate": -0.094494,
+        "ci95": [
+          -0.349005,
+          0.160017
+        ]
+      }
+    },
+    "pseudo_outcome_pretreatment_history_spend": {
+      "estimate": 0.191623,
+      "ci95": [
+        -0.168186,
+        0.551433
+      ]
+    },
+    "note": "Both checks must be ~0: the placebo breaks the treatment-outcome link while keeping the pipeline identical, and history spend is pre-treatment, so the real assignment cannot have caused it. Estimates are reported as computed, whatever they are."
   }
 }
